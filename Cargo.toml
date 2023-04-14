@@ -15,4 +15,4 @@ exclude = [
 ]
 
 [dependencies]
-zip = "0.6.2"
+zip = "0.6.4"
