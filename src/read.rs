@@ -126,7 +126,7 @@ impl<R: Read + io::Seek> ZipArchiveExtensions for ZipArchive<R> {
 
         for file_number in 0..self.len() {
             let mut next: ZipFile = self.by_index(file_number)?;
-            let sanitized_name = next.sanitized_name();
+            let sanitized_name = next.mangled_name();
             if next.is_dir() {
                 let extracted_folder_path = target_directory.as_ref().join(sanitized_name);
                 std::fs::create_dir_all(extracted_folder_path)?;
@@ -174,7 +174,7 @@ impl<R: Read + io::Seek> ZipArchiveExtensions for ZipArchive<R> {
 
     fn entry_path(&mut self, file_number: usize) -> ZipResult<PathBuf> {
         let next: ZipFile = self.by_index(file_number)?;
-        Ok(next.sanitized_name())
+        Ok(next.mangled_name())
     }
 
     fn file_number<P>(&mut self, entry_path: P) -> Option<usize>
@@ -183,7 +183,7 @@ impl<R: Read + io::Seek> ZipArchiveExtensions for ZipArchive<R> {
     {
         for file_number in 0..self.len() {
             if let Ok(next) = self.by_index(file_number) {
-                let sanitized_name = next.sanitized_name();
+                let sanitized_name = next.mangled_name();
                 if sanitized_name.as_path() == entry_path.as_ref() {
                     return Some(file_number);
                 }
